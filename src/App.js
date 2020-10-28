@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 
 import './App.css';
 import Person from './Person/Person';
+import Radium,{StyleRoot} from 'radium';
 
 class App extends Component {
   state={
     persons:[
-      {name:'krishna', age:30},
-      {name:'pkrishn', age:35},
-      {name:'burri', age:28}
+      {id:"first",name:'krishna', age:30},
+      {id:"second",name:'pkrishn', age:35},
+      {id:"third",name:'burri', age:28}
      
     ],
     toDisplay:false
@@ -16,33 +17,67 @@ class App extends Component {
   buttonEventHandler=()=>{
     this.setState({toDisplay:!this.state.toDisplay});
   };
-  handleChanger = (event) => {
+  nameChangeHandler = (event,id) => {
+    const personind=this.state.persons.findIndex((ele)=>{return ele.id===id;});
+    const person={...this.state.persons[personind]};
+    person.name=event.target.value;
+    const persons=[...this.state.persons];
+    persons[personind]=person;
     this.setState({
-      persons:[
-        {name:'krishna',age:398},
-        {name:event.target.value,age:35},
-      {name:'kiran',age:22}
-    ]
 
+      persons:persons
     });
     
   };
+  deleteEventHandler=(index)=>{ 
+    let persons=[...this.state.persons];
+    persons.splice(index,1);
+    this.setState({persons:persons});
+  }
   render() {
+    const style={
+      backgroundColor:'green',
+      color:'white',
+      font:'inherit',
+      border:'1px solid blue',
+      padding:'8px',
+      cursor:'pointer',
+      ':hover':{
+        backgroundColor:'yellow',
+        color:'blue'
+      }
+    };
+    let el;
+    if(this.state.toDisplay)
+    {
+       el=(<div>
+      {this.state.persons.map((person,index)=>{
+        return <Person key={person.id} 
+                changed={(event)=>this.nameChangeHandler(event,person.id)} 
+                name={person.name} age={person.age} 
+                click={this.deleteEventHandler.bind(this,index)}
+                />
+      }
+      )
+      }
+      
+    </div>);
+    style.backgroundColor='red';
+    }
+    const classes=['red','bold'];
+    
     return (
-      <div className="App">
+      <StyleRoot>
+      <div className="App" >
       
         <h1 className="App-title">Welcome to React</h1>
-        <button onClick={this.buttonEventHandler.bind(this)}>switch name</button>
-        {this.state.toDisplay?
-        <div>
-          <Person name={this.state.persons[0].name} age={this.state.persons[0].age }/>
-          <Person click={()=>{return this.buttonEventHandler("maxmill");}} name={this.state.persons[1].name} 
-          age={this.state.persons[1].age} handleChange={this.handleChanger}/>
-          <Person name={this.state.persons[2].name} age={this.state.persons[2].age}/>
-        </div>:null}
-      </div>
+        <p className={classes.join(' ')}>udemy business visa</p>
+        <button style={style} onClick={this.buttonEventHandler.bind(this)}>switch name</button>
+        {el}
+      </div></StyleRoot>
     ); 
+    
   }
 }
 
-export default App;
+export default Radium(App);
