@@ -2,8 +2,20 @@ import React, { Component } from 'react';
 
 import './App.css';
 import Person from './Person/Person';
-import Radium,{StyleRoot} from 'radium';
+import styled from 'styled-components'
 
+const StyledButton=styled.button`
+background-color:${props=>props.alt?'red':'green'};
+color:white;
+font:inherit;
+border:1px solid blue;
+padding:8px;
+cursor:pointer;
+&:hover{
+  background-color:yellow;
+  color:blue;
+}
+`;
 class App extends Component {
   state={
     persons:[
@@ -35,18 +47,7 @@ class App extends Component {
     this.setState({persons:persons});
   }
   render() {
-    const style={
-      backgroundColor:'green',
-      color:'white',
-      font:'inherit',
-      border:'1px solid blue',
-      padding:'8px',
-      cursor:'pointer',
-      ':hover':{
-        backgroundColor:'yellow',
-        color:'blue'
-      }
-    };
+    
     let el;
     if(this.state.toDisplay)
     {
@@ -62,22 +63,22 @@ class App extends Component {
       }
       
     </div>);
-    style.backgroundColor='red';
+    
     }
     const classes=['red','bold'];
     
     return (
-      <StyleRoot>
+      
       <div className="App" >
       
         <h1 className="App-title">Welcome to React</h1>
         <p className={classes.join(' ')}>udemy business visa</p>
-        <button style={style} onClick={this.buttonEventHandler.bind(this)}>switch name</button>
+        <StyledButton alt={this.state.toDisplay} onClick={this.buttonEventHandler.bind(this)}>switch name</StyledButton>
         {el}
-      </div></StyleRoot>
+      </div>
     ); 
     
   }
 }
 
-export default Radium(App);
+export default App;
